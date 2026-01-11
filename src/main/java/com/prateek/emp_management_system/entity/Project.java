@@ -1,0 +1,43 @@
+package com.prateek.emp_management_system.entity;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Project {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String projectName;
+
+    private String description;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    // Many projects have one manager
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
+
+    // One project has many assignments
+    @OneToMany(mappedBy = "project")
+    private List<ProjectAssignment> assignments;
+
+
+
+
+}
