@@ -20,7 +20,7 @@ public class ProjectAssignmentServiceImp implements ProjectService{
     }
 
     @Override
-    public ProjectResponseDTO updateProject(Long projectId, ProjectRequestDTO dto) {
+
     public ProjectResponseDTO updateProject(Long projectId, ProjectRequestDTO dto) {
         return null;
     }

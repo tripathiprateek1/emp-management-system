@@ -33,6 +33,7 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+
     @OneToMany(mappedBy = "manager")
     private List<Project> managedProjects;
 

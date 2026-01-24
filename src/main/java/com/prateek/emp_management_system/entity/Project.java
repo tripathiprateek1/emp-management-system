@@ -33,6 +33,9 @@ public class Project {
     @JoinColumn(name = "manager_id")
     private Employee manager;
 
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus projectStatus;
+
     // One project has many assignments
     @OneToMany(mappedBy = "project")
     private List<ProjectAssignment> assignments;

@@ -4,6 +4,7 @@ package com.prateek.emp_management_system.service;
 import com.prateek.emp_management_system.dto.EmployeeRequestDTO;
 import com.prateek.emp_management_system.dto.EmployeeResponseDTO;
 import com.prateek.emp_management_system.entity.Employee;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
