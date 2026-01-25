@@ -3,6 +3,7 @@ package com.prateek.emp_management_system.service;
 import com.prateek.emp_management_system.dto.CreateProjectRequestDTO;
 import com.prateek.emp_management_system.dto.ProjectResponseDTO;
 import com.prateek.emp_management_system.dto.UpdateProjectRequestDTO;
+import org.springframework.data.domain.Page;
 
 public interface ProjectService {
 

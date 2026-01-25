@@ -8,10 +8,15 @@ import com.prateek.emp_management_system.entity.Project;
 import com.prateek.emp_management_system.entity.ProjectStatus;
 import com.prateek.emp_management_system.entity.Role;
 import com.prateek.emp_management_system.repository.EmployeeRepository;
+import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
 import com.prateek.emp_management_system.repository.ProjectRepository;
 import com.sun.jdi.request.DuplicateRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 public class ProjectServiceImp implements ProjectService{
 
@@ -20,6 +25,9 @@ public class ProjectServiceImp implements ProjectService{
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ProjectAssignmentRepository projectAssignmentRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -66,7 +74,18 @@ public class ProjectServiceImp implements ProjectService{
 
     @Override
     public Page<ProjectResponseDTO> getAllProjects(int page, int size, String sortBy) {
-        return null;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+        Page<Project> projectPage=projectRepository.findAll(pageable);
+
+
+        return  projectPage.map(project  ->{
+               ProjectResponseDTO dto = modelMapper.map(project,ProjectResponseDTO.class);
+               dto.setManagerId(project.getManager().getId());
+               dto.setManagerName(project.getManager().getName());
+               return dto;
+        });
+
     }
 
     @Override
@@ -99,6 +118,16 @@ public class ProjectServiceImp implements ProjectService{
 
     @Override
     public void deleteProject(Long projectId) {
+        Project project =projectRepository.findById(projectId).orElseThrow(() ->
+                new ProjectNotFoundException("Project not found with id: " + projectId));
+
+        if(project.getProjectStatus()==ProjectStatus.IN_PROGRESS){
+            throw new ValidationException("Cannot delete project that is in progress");
+        }
+       if(projectAssignmentRepository.existsByProjectId(projectId)){
+           throw new ValidationException("Remove assigned employees before deleting project");
+        }
+       projectRepository.delete(project);
 
     }
 }
