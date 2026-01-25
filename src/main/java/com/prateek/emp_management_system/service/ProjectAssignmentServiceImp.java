@@ -1,11 +1,11 @@
 package com.prateek.emp_management_system.service;
 
-import com.prateek.emp_management_system.dto.ProjectRequestDTO;
+import com.prateek.emp_management_system.dto.CreateProjectRequestDTO;
 import com.prateek.emp_management_system.dto.ProjectResponseDTO;
 
 public class ProjectAssignmentServiceImp implements ProjectService{
     @Override
-    public ProjectResponseDTO createProject(ProjectRequestDTO dto) {
+    public ProjectResponseDTO createProject(CreateProjectRequestDTO dto) {
         return null;
     }
 
@@ -19,9 +19,8 @@ public class ProjectAssignmentServiceImp implements ProjectService{
         return null;
     }
 
-    @Override
 
-    public ProjectResponseDTO updateProject(Long projectId, ProjectRequestDTO dto) {
+    public ProjectResponseDTO updateProject(Long projectId, CreateProjectRequestDTO dto) {
         return null;
     }
 

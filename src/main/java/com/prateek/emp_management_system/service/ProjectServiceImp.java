@@ -1,7 +1,8 @@
 package com.prateek.emp_management_system.service;
 
-import com.prateek.emp_management_system.dto.ProjectRequestDTO;
+import com.prateek.emp_management_system.dto.CreateProjectRequestDTO;
 import com.prateek.emp_management_system.dto.ProjectResponseDTO;
+import com.prateek.emp_management_system.dto.UpdateProjectRequestDTO;
 import com.prateek.emp_management_system.entity.Employee;
 import com.prateek.emp_management_system.entity.Project;
 import com.prateek.emp_management_system.entity.ProjectStatus;
@@ -24,7 +25,7 @@ public class ProjectServiceImp implements ProjectService{
     private ModelMapper modelMapper;
 
     @Override
-    public ProjectResponseDTO createProject(ProjectRequestDTO dto) {
+    public ProjectResponseDTO createProject(CreateProjectRequestDTO dto) {
 
          if(projectRepository.existsByName(dto.getProjectName())) {
              throw new DuplicateRequestException("Project already exists with name: " + dto.getProjectName());
@@ -55,7 +56,12 @@ public class ProjectServiceImp implements ProjectService{
 
     @Override
     public ProjectResponseDTO getProjectById(Long projectId) {
-        return null;
+        Project  project=projectRepository.findById(projectId).orElseThrow(() ->
+                 new ProjectNotFoundException("Project not found with id: " + projectId));
+        ProjectResponseDTO dto =modelMapper.map(project, ProjectResponseDTO.class);
+        dto.setManagerId(project.getManager().getId());
+        dto.setManagerName(project.getManager().getName());
+        return dto;
     }
 
     @Override
@@ -64,8 +70,31 @@ public class ProjectServiceImp implements ProjectService{
     }
 
     @Override
-    public ProjectResponseDTO updateProject(Long projectId, ProjectRequestDTO dto) {
-        return null;
+    public ProjectResponseDTO updateProject(Long projectId, UpdateProjectRequestDTO dto) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() ->
+                        new ProjectNotFoundException("Project not found with id: " + projectId));
+        modelMapper.map(dto,Project.class);
+        if(dto.getProjectStatus()!=null){
+            project.setProjectStatus(dto.getProjectStatus());
+        }
+        if (dto.getManagerId() != null) {
+            Employee manager = employeeRepository.findById(dto.getManagerId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Manager not found with id: " + dto.getManagerId()));
+
+            if (manager.getRole() != Role.MANAGER) {
+                throw new ValidationException("User is not a Manager");
+            }
+            project.setManager(manager);
+        }
+        Project updatedProject = projectRepository.save(project);
+
+        ProjectResponseDTO response = modelMapper.map(updatedProject, ProjectResponseDTO.class);
+        response.setManagerId(updatedProject.getManager().getId());
+        response.setManagerName(updatedProject.getManager().getName());
+
+        return response;
     }
 
     @Override

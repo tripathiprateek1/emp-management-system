@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class ProjectRequestDTO {
+public class CreateProjectRequestDTO {
 
     @NotBlank(message = "Project name is mandatory")
     private String projectName;
