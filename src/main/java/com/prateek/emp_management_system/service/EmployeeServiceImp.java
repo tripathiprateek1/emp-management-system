@@ -3,8 +3,12 @@ package com.prateek.emp_management_system.service;
 import com.prateek.emp_management_system.dto.EmployeeRequestDTO;
 import com.prateek.emp_management_system.dto.EmployeeResponseDTO;
 import com.prateek.emp_management_system.entity.Employee;
+import com.prateek.emp_management_system.exception.DuplicateResourceException;
+import com.prateek.emp_management_system.exception.EmployeeNotFoundException;
+import com.prateek.emp_management_system.exception.ValidationException;
 import com.prateek.emp_management_system.repository.EmployeeRepository;
 import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +34,7 @@ public class EmployeeServiceImp implements EmployeeService {
     @Override
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO dto) {
         Optional<Employee> employeeExist=employeeRepository.findByEmail(dto.getEmail());
-        if(employeeExist.isPresent()) throw new EmployeeException("Employee with email " +
+        if(employeeExist.isPresent()) throw new DuplicateResourceException("Employee with email " +
                                                 dto.getEmail() + " already exists");
         Employee employee= modelMapper.map(dto,Employee.class);
         employee.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -73,15 +77,15 @@ public class EmployeeServiceImp implements EmployeeService {
 
     @Override
     public void deleteEmployee(Long id) {
-          if(employeeRepository.existsById(id)) {
-              throw new EmployeeNotFound(
+          if(!employeeRepository.existsById(id)) {
+              throw new EmployeeNotFoundException(
                       "Employee not found with id: " + id);
           }
           if(projectAssignmentRepository.existsByEmployeeId(id)){
-              throw new IllegalOperationException(
-                  "Employee is assigned to a project. Remove assignment first.");
+              throw new ValidationException("Employee is assigned to a project. Remove assignment first.");
           }
           employeeRepository.deleteById(id);
 
     }
 }
+

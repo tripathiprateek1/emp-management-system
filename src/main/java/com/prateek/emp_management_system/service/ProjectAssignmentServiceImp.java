@@ -7,6 +7,9 @@ import com.prateek.emp_management_system.dto.ProjectResponseDTO;
 import com.prateek.emp_management_system.entity.Employee;
 import com.prateek.emp_management_system.entity.Project;
 import com.prateek.emp_management_system.entity.ProjectAssignment;
+import com.prateek.emp_management_system.exception.EmployeeNotFoundException;
+import com.prateek.emp_management_system.exception.ProjectNotFoundException;
+import com.prateek.emp_management_system.exception.ValidationException;
 import com.prateek.emp_management_system.repository.EmployeeRepository;
 import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
 import com.prateek.emp_management_system.repository.ProjectRepository;
@@ -15,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.List;
-
-
+import java.util.stream.Collectors;
 
 public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
 
@@ -26,7 +28,6 @@ public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
     private EmployeeRepository employeeRepository;
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private ModelMapper modelMapper;
 
@@ -64,11 +65,48 @@ public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
 
     @Override
     public List<ProjectAssignmentResponseDTO> getProjectsByEmployee(Long employeeId) {
-        return List.of();
+
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new EmployeeNotFoundException("Employee not found with id: " + employeeId);
+        }
+
+        if (!projectAssignmentRepository.existsByEmployeeId(employeeId)) {
+            throw new ValidationException("Employee has no project assignments");
+        }
+        List<ProjectAssignment> listOfAssignment= projectAssignmentRepository.findByEmployeeId(employeeId);
+        List<ProjectAssignmentResponseDTO> responseDTOList= listOfAssignment.stream().
+                map(projectAssignment -> {
+                    ProjectAssignmentResponseDTO responseDTO=modelMapper.map(projectAssignment,
+                            ProjectAssignmentResponseDTO.class);
+                    responseDTO.setEmployeeId(projectAssignment.getEmployee().getId());
+                    responseDTO.setEmployeeName(projectAssignment.getEmployee().getName());
+                    responseDTO.setProjectId(projectAssignment.getProject().getId());
+                    responseDTO.setProjectName(projectAssignment.getProject().getProjectName());
+                    return responseDTO;
+                }).collect(Collectors.toList());
+        return responseDTOList;
     }
 
     @Override
     public List<ProjectAssignmentResponseDTO> getEmployeesByProject(Long projectId) {
-        return List.of();
+        if(!projectRepository.existsById(projectId)){
+            throw new ProjectNotFoundException("Project not found with id: " + projectId);
+        }
+        if(projectAssignmentRepository.existsByProjectId(projectId)){
+            throw new ValidationException("Project have no Assignment");
+        }
+        List<ProjectAssignment> listOfAssignment= projectAssignmentRepository.findByProjectId(projectId);
+
+        List<ProjectAssignmentResponseDTO> responseDTOList= listOfAssignment.stream().
+                map(projectAssignment -> {
+                    ProjectAssignmentResponseDTO responseDTO=modelMapper.map(projectAssignment,
+                            ProjectAssignmentResponseDTO.class);
+                    responseDTO.setEmployeeId(projectAssignment.getEmployee().getId());
+                    responseDTO.setEmployeeName(projectAssignment.getEmployee().getName());
+                    responseDTO.setProjectId(projectAssignment.getProject().getId());
+                    responseDTO.setProjectName(projectAssignment.getProject().getProjectName());
+                    return responseDTO;
+                }).collect(Collectors.toList());
+        return responseDTOList;
     }
 }

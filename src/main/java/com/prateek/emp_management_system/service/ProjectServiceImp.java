@@ -7,6 +7,9 @@ import com.prateek.emp_management_system.entity.Employee;
 import com.prateek.emp_management_system.entity.Project;
 import com.prateek.emp_management_system.entity.ProjectStatus;
 import com.prateek.emp_management_system.entity.Role;
+import com.prateek.emp_management_system.exception.EmployeeNotFoundException;
+import com.prateek.emp_management_system.exception.ProjectNotFoundException;
+import com.prateek.emp_management_system.exception.ValidationException;
 import com.prateek.emp_management_system.repository.EmployeeRepository;
 import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
 import com.prateek.emp_management_system.repository.ProjectRepository;
@@ -43,7 +46,7 @@ public class ProjectServiceImp implements ProjectService{
                     "End date cannot be before start date");
         }
         Employee manager = employeeRepository.findById(dto.getManagerId())
-                .orElseThrow(() -> new ResourceNotFoundException(
+                .orElseThrow(() -> new EmployeeNotFoundException(
                         "Manager not found with id: " + dto.getManagerId()));
 
         if (manager.getRole() != Role.MANAGER) {
@@ -99,7 +102,7 @@ public class ProjectServiceImp implements ProjectService{
         }
         if (dto.getManagerId() != null) {
             Employee manager = employeeRepository.findById(dto.getManagerId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
+                    .orElseThrow(() -> new EmployeeNotFoundException(
                             "Manager not found with id: " + dto.getManagerId()));
 
             if (manager.getRole() != Role.MANAGER) {
