@@ -1,5 +1,6 @@
 package com.prateek.emp_management_system.dto;
 
+import com.prateek.emp_management_system.entity.Role;
 import lombok.Data;
 
 import java.time.LocalDate;
