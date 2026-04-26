@@ -10,15 +10,15 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "secret123";
+    private final String SECRET = "secret123";
 
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }
 
@@ -30,18 +30,9 @@ public class JwtUtil {
         return extractClaims(token).get("role", String.class);
     }
 
-    public boolean validateToken(String token) {
-        try {
-            extractClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private Claims extractClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody();
     }

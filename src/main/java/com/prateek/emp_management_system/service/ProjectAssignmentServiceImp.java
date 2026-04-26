@@ -15,11 +15,13 @@ import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
 import com.prateek.emp_management_system.repository.ProjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
 
     @Autowired

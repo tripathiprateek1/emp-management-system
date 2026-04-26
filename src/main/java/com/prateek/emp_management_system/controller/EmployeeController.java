@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmployeeResponseDTO> createEmployee(
             @RequestBody  @Valid EmployeeRequestDTO dto) {
 
@@ -34,6 +36,7 @@ public class EmployeeController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<EmployeeResponseDTO>> getAllEmployees(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -44,6 +47,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
             @PathVariable Long id,
             @RequestBody  @Valid EmployeeRequestDTO dto) {
@@ -52,6 +56,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteEmployee(
             @PathVariable Long id) {
 

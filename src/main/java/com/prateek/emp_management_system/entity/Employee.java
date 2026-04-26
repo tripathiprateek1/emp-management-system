@@ -2,7 +2,7 @@ package com.prateek.emp_management_system.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,7 +32,6 @@ public class Employee {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
 
     @OneToMany(mappedBy = "manager")
     private List<Project> managedProjects;

@@ -20,7 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class ProjectServiceImp implements ProjectService{
 
     @Autowired
@@ -38,7 +41,7 @@ public class ProjectServiceImp implements ProjectService{
     @Override
     public ProjectResponseDTO createProject(CreateProjectRequestDTO dto) {
 
-         if(projectRepository.existsByName(dto.getProjectName())) {
+         if(projectRepository.existsByProjectName(dto.getProjectName())) {
              throw new DuplicateRequestException("Project already exists with name: " + dto.getProjectName());
          }
          if (dto.getEndDate().isBefore(dto.getStartDate())) {

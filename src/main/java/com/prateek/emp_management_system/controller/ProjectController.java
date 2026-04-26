@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class ProjectController {
     private ProjectService projectService;
 
     @PostMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ProjectResponseDTO> createProject(
             @RequestBody CreateProjectRequestDTO dto) {
 
@@ -34,6 +36,7 @@ public class ProjectController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Page<ProjectResponseDTO>> getAllProjects(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -44,6 +47,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<ProjectResponseDTO> updateProject(
             @PathVariable Long projectId,
             @RequestBody UpdateProjectRequestDTO dto) {
@@ -54,6 +58,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
+    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<String> deleteProject(
             @PathVariable Long projectId) {
 
