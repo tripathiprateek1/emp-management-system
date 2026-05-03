@@ -15,5 +15,4 @@ public class ProjectAssignmentRequestDTO {
     @NotNull(message = "Project ID is required")
     private Long projectId;
 
-    private LocalDate assignedDate;
 }

@@ -7,13 +7,13 @@ import com.prateek.emp_management_system.entity.Employee;
 import com.prateek.emp_management_system.entity.Project;
 import com.prateek.emp_management_system.entity.ProjectStatus;
 import com.prateek.emp_management_system.entity.Role;
+import com.prateek.emp_management_system.exception.DuplicateResourceException;
 import com.prateek.emp_management_system.exception.EmployeeNotFoundException;
 import com.prateek.emp_management_system.exception.ProjectNotFoundException;
 import com.prateek.emp_management_system.exception.ValidationException;
 import com.prateek.emp_management_system.repository.EmployeeRepository;
 import com.prateek.emp_management_system.repository.ProjectAssignmentRepository;
 import com.prateek.emp_management_system.repository.ProjectRepository;
-import com.sun.jdi.request.DuplicateRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +42,7 @@ public class ProjectServiceImp implements ProjectService{
     public ProjectResponseDTO createProject(CreateProjectRequestDTO dto) {
 
          if(projectRepository.existsByProjectName(dto.getProjectName())) {
-             throw new DuplicateRequestException("Project already exists with name: " + dto.getProjectName());
+             throw new DuplicateResourceException("Project already exists with name: " + dto.getProjectName());
          }
          if (dto.getEndDate().isBefore(dto.getStartDate())) {
             throw new ValidationException(
@@ -55,10 +55,14 @@ public class ProjectServiceImp implements ProjectService{
         if (manager.getRole() != Role.MANAGER) {
             throw new ValidationException("User is not a Manager");
         }
-
-        Project project = modelMapper.map(dto, Project.class);
+        Project project = new Project();
+        project.setProjectName(dto.getProjectName());
+        project.setDescription(dto.getDescription());
+        project.setStartDate(dto.getStartDate());
+        project.setEndDate(dto.getEndDate());
         project.setManager(manager);
         project.setProjectStatus(ProjectStatus.PLANNED);
+
         Project savedProject = projectRepository.save(project);
         ProjectResponseDTO response =
                 modelMapper.map(savedProject, ProjectResponseDTO.class);

@@ -35,6 +35,7 @@ public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
 
     @Override
     public ProjectAssignmentResponseDTO assignEmployeeToProject(ProjectAssignmentRequestDTO dto) {
+
         Project project = projectRepository.findById(dto.getProjectId())
                 .orElseThrow(() -> new ProjectNotFoundException(
                         "Project not found with id: " + dto.getProjectId()));
@@ -43,28 +44,37 @@ public class ProjectAssignmentServiceImp implements ProjectAssignmentService{
                 .orElseThrow(() -> new EmployeeNotFoundException(
                         "Employee not found with id: " + dto.getEmployeeId()));
 
-
-        if(projectAssignmentRepository.existsByProjectIdAndEmployeeId(dto.getProjectId(),
-                dto.getEmployeeId()))
-        {
+        if (projectAssignmentRepository.existsByProjectAndEmployee(project, employee)) {
             throw new ValidationException("Employee already assigned to this project");
         }
-        ProjectAssignment projectAssignment = new ProjectAssignment();
-        projectAssignment.setProject(project);
-        projectAssignment.setEmployee(employee);
-        projectAssignment.setAssignedDate(LocalDate.now());
-        ProjectAssignment saved = projectAssignmentRepository.save(projectAssignment);
 
-        ProjectAssignmentResponseDTO responseDTO =
+        LocalDate assignedDate = LocalDate.now();
+
+        if (assignedDate.isBefore(project.getStartDate()) ||
+                assignedDate.isAfter(project.getEndDate())) {
+
+            throw new ValidationException(
+                    "Assignment date must be within project duration"
+            );
+        }
+
+        ProjectAssignment assignment = new ProjectAssignment();
+        assignment.setProject(project);
+        assignment.setEmployee(employee);
+        assignment.setAssignedDate(assignedDate);
+
+        ProjectAssignment saved = projectAssignmentRepository.save(assignment);
+
+        ProjectAssignmentResponseDTO response =
                 modelMapper.map(saved, ProjectAssignmentResponseDTO.class);
 
-        responseDTO.setProjectId(saved.getProject().getId());
-        responseDTO.setEmployeeId(saved.getEmployee().getId());
-        responseDTO.setProjectName(saved.getProject().getProjectName());
-        responseDTO.setEmployeeName(saved.getEmployee().getName());
-        return responseDTO;
-    }
+        response.setProjectId(saved.getProject().getId());
+        response.setEmployeeId(saved.getEmployee().getId());
+        response.setProjectName(saved.getProject().getProjectName());
+        response.setEmployeeName(saved.getEmployee().getName());
 
+        return response;
+    }
     @Override
     public List<ProjectAssignmentResponseDTO> getProjectsByEmployee(Long employeeId) {
 

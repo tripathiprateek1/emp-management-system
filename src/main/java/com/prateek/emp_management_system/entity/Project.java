@@ -41,6 +41,4 @@ public class Project {
     private List<ProjectAssignment> assignments;
 
 
-
-
 }

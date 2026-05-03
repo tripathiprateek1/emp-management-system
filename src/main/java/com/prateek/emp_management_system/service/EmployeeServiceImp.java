@@ -38,7 +38,12 @@ public class EmployeeServiceImp implements EmployeeService {
         Optional<Employee> employeeExist=employeeRepository.findByEmail(dto.getEmail());
         if(employeeExist.isPresent()) throw new DuplicateResourceException("Employee with email " +
                                                 dto.getEmail() + " already exists");
-        Employee employee= modelMapper.map(dto,Employee.class);
+        Employee employee = new Employee();
+        employee.setName(dto.getName());
+        employee.setEmail(dto.getEmail());
+        employee.setDesignation(dto.getDesignation());
+        employee.setRole(dto.getRole());
+        employee.setDateOfJoining(dto.getDateOfJoining());
         employee.setPassword(passwordEncoder.encode(dto.getPassword()));
         employeeRepository.save(employee);
 

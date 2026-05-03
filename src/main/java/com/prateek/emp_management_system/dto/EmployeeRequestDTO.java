@@ -3,8 +3,11 @@ package com.prateek.emp_management_system.dto;
 import com.prateek.emp_management_system.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 @Data
 public class EmployeeRequestDTO {
@@ -22,6 +25,9 @@ public class EmployeeRequestDTO {
 
     @NotBlank(message = "Designation is manadatory")
     private String designation ;
+
+    @NotNull(message = "Date of Joining is manadatory")
+    private LocalDate dateOfJoining;
 
     private Role role;
 }
