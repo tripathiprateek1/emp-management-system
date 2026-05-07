@@ -5,10 +5,11 @@ The system supports role-based management, project allocation, validation rules,
 
  ## 🚀 Features
 ### 👨‍💼 Employee Management
-     - Create and manage employees
-     - Role-based employee system:
-        - ADMIN
-        - MANAGER
-        - EMPLOYEE
-     - Email uniqueness validation
-     - Password encryption using BCrypt
+
+- Create and manage employees
+- Role-based employee system:
+  - ADMIN
+  - MANAGER
+  - EMPLOYEE
+- Email uniqueness validation
+- Password encryption using BCrypt
