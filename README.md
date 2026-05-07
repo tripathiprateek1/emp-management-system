@@ -30,4 +30,66 @@ The system supports role-based management, project allocation, validation rules,
 - Assignment date validation
 - Manager validation before project creation
 
+## 🔐 Security
+- Spring Security integration
+- JWT Authentication support
+- Stateless session management
+- Role-based authorization
+
+## ⚠️ Exception Handling
+- Global exception handling using @RestControllerAdvice:
+- Resource not found
+- Duplicate resources
+- Validation failures
+- Generic exception handling
+
+## 🛠️ Tech Stack
+| Technology      | Usage                          |
+| --------------- | ------------------------------ |
+| Java 21         | Backend Language               |
+| Spring Boot     | Backend Framework              |
+| Spring Security | Authentication & Authorization |
+| Spring Data JPA | Database Operations            |
+| Hibernate       | ORM                            |
+| MySQL           | Relational Database            |
+| JWT             | Authentication                 |
+| ModelMapper     | DTO Mapping                    |
+| Maven           | Build Tool                     |
+| Lombok          | Boilerplate Reduction          |
+
+## 📂 Project Structure
+src/main/java/com/prateek/emp_management_system
+│
+├── controller
+├── service
+├── repository
+├── entity
+├── dto
+├── exception
+├── security
+├── config
+└── enums
+
+## 🗄️ Database Design
+### Employee
+- id
+- name
+- email
+- password
+- designation
+- dateOfJoining
+- role
+### Project
+- id
+- projectName
+- description
+- startDate
+- endDate
+- projectStatus
+- manager_id
+### ProjectAssignment
+- id
+- employee_id
+- project_id
+- assignedDate
   
