@@ -92,4 +92,44 @@ src/main/java/com/prateek/emp_management_system
 - employee_id
 - project_id
 - assignedDate
+
+## 🔄 Relationships
+- One Manager → Many Projects
+- One Project → Many Assignments
+- One Employee → Many Assignments
+- 
+## ✅ Business Validations
+- Duplicate employee email not allowed
+- Duplicate project names not allowed
+- Employee cannot be assigned twice to same project
+- End date cannot be before start date
+- Only MANAGER role can manage projects
+- Assignment date must lie within project duration
+
+## ▶️ Running the Project
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/your-username/emp-management-system.git
+```
+
+---
+
+### 2️⃣ Configure Database
+
+Update `application.properties`
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/emp_db
+spring.datasource.username=root
+spring.datasource.password=your_password
+```
+
+---
+
+### 3️⃣ Run Application
+
+```bash
+mvn spring-boot:run
+```
   
