@@ -74,12 +74,26 @@ public class EmployeeServiceImp implements EmployeeService {
     public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO dto) {
      Employee employee =employeeRepository.findById(id).orElseThrow
                                 (() -> new EmployeeNotFoundException("Employee not found with id: " + id));
-       employee = modelMapper.map(dto ,Employee.class);
-        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            employee.setPassword(passwordEncoder.encode(dto.getPassword()));
+        employee.setName(dto.getName());
+        employee.setEmail(dto.getEmail());
+        employee.setDesignation(dto.getDesignation());
+        employee.setRole(dto.getRole());
+        employee.setDateOfJoining(dto.getDateOfJoining());
+
+        // Update password only if provided
+        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+
+            // avoid re-encoding same password
+            if (!passwordEncoder.matches(dto.getPassword(), employee.getPassword())) {
+
+                employee.setPassword(
+                        passwordEncoder.encode(dto.getPassword()));
+            }
         }
-        Employee  updatedEmployee = employeeRepository.save(employee);
-        return  modelMapper.map(updatedEmployee,EmployeeResponseDTO.class);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return modelMapper.map(updatedEmployee, EmployeeResponseDTO.class);
     }
 
     @Override
