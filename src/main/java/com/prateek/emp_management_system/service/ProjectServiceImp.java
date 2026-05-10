@@ -103,8 +103,23 @@ public class ProjectServiceImp implements ProjectService{
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() ->
                         new ProjectNotFoundException("Project not found with id: " + projectId));
-        modelMapper.map(dto,Project.class);
-        if(dto.getProjectStatus()!=null){
+        if (dto.getProjectName() != null) {
+            project.setProjectName(dto.getProjectName());
+        }
+
+        if (dto.getDescription() != null) {
+            project.setDescription(dto.getDescription());
+        }
+
+        if (dto.getStartDate() != null) {
+            project.setStartDate(dto.getStartDate());
+        }
+
+        if (dto.getEndDate() != null) {
+            project.setEndDate(dto.getEndDate());
+        }
+
+        if (dto.getProjectStatus() != null) {
             project.setProjectStatus(dto.getProjectStatus());
         }
         if (dto.getManagerId() != null) {
